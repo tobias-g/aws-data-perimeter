@@ -3,11 +3,12 @@
 # data perimeter
 
 resource "aws_s3_bucket" "misconfigured" {
-  bucket = "not-super-secure"
+  bucket        = "${var.environment}-not-very-secure"
+  force_destroy = true
 
   tags = {
-    Name        = "not-super-secure"
-    Description = "A bucket with a bad bucket policy to demo aws data perimeter"
+    Name        = "${var.environment}-not-very-secure"
+    Description = "Our ${var.environment} bucket with a bad bucket policy to demo aws data perimeter"
   }
 }
 
@@ -22,9 +23,9 @@ resource "aws_s3_bucket_public_access_block" "example" {
 
 resource "aws_s3_object" "object" {
   bucket = aws_s3_bucket.misconfigured.id
-  key    = "data.txt"
-  source = "data.txt"
-  etag   = filemd5("data.txt")
+  key    = "${var.environment}-data.txt"
+  source = "${path.module}/data.txt"
+  etag   = filemd5("${path.module}/data.txt")
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
@@ -47,8 +48,13 @@ data "aws_iam_policy_document" "allow_access_from_any_account" {
     }
 
     actions = [
-      "s3:GetObject",
       "s3:ListBucket",
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:GetObjectTagging",
+      "s3:PutObjectTagging",
+      "s3:GetObjectVersion",
+      "s3:GetObjectVersionTagging",
     ]
 
     resources = [
@@ -81,7 +87,7 @@ data "aws_iam_policy_document" "block_access_from_outside_org" {
       variable = "aws:PrincipalOrgID"
 
       values = [
-        var.org_id,
+        data.aws_organizations_organization.current.id,
       ]
     }
   }
