@@ -1,0 +1,23 @@
+{
+  "name": "data-perimeter",
+  "version": "1.0.0",
+  "description": "Lambda function to mark resources as non-compliance which don't explicitly block access from outside the AWS org",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tobias-g/aws-data-perimeter.git"
+  },
+  "author": "Tobias Gray",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tobias-g/aws-data-perimeter/issues"
+  },
+  "homepage": "https://github.com/tobias-g/aws-data-perimeter#readme",
+  "devDependencies": {
+    "@aws-sdk/client-config-service": "3.844.0",
+    "standard": "17.1.2"
+  }
+}
